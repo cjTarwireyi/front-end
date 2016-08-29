@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:background="#DDDDDD">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:gravity="center|right">
+
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="45dp"
+                    android:id="@+id/imageView"
+                    android:src="@drawable/bus" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Bus Booking"
+                    android:id="@+id/textView12"
+                    android:textColor="#363636" />
+
+            </LinearLayout>
+
+            <ImageButton
+                android:layout_width="69dp"
+                android:layout_height="69dp"
+                android:id="@+id/imageButton"
+                android:src="@drawable/options"
+                android:background="#00000000" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="101dp"
+        android:id="@+id/middlesection"
+        android:background="#29A9D2"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="20dp">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/bottomlayout"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="30dp"
+        android:paddingTop="20dp"
+        android:weightSum="1">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp">
+
+        </LinearLayout>
+
+        <Button
+            android:layout_width="264dp"
+            android:layout_height="wrap_content"
+            android:text="Add Passenger"
+            android:id="@+id/button"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.08"
+            android:onClick="addPassenger"
+            />
+
+        <Button
+            android:layout_width="264dp"
+            android:layout_height="wrap_content"
+            android:text="Search Passenger"
+            android:id="@+id/button2"
+            android:layout_gravity="center_horizontal"
+            android:onClick="displayAll"
+            android:layout_weight="0.08"
+            />
+
+        <Button
+            android:layout_width="264dp"
+            android:layout_height="wrap_content"
+            android:text="Update Passenger"
+            android:id="@+id/button3"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.08"
+            android:onClick="updateRecord"
+            />
+
+        <Button
+            android:layout_width="264dp"
+            android:layout_height="wrap_content"
+            android:text="Delete Passenger"
+            android:id="@+id/button4"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.08"
+            android:onClick="Delete"/>
+
+    </LinearLayout>
+
+</LinearLayout>

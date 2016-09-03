@@ -3,7 +3,9 @@ package ac.cj.cornelious.busbooking.config;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -16,18 +18,32 @@ import ac.cj.cornelious.busbooking.config.factories.impl.PassengerAddressFactory
 import ac.cj.cornelious.busbooking.config.factories.impl.PassengerFactoryImpl;
 import ac.cj.cornelious.busbooking.config.repositories.IPassengerRepository;
 import ac.cj.cornelious.busbooking.config.repositories.impl.PassengerRepositoryImpl;
+import ac.cj.cornelious.busbooking.config.repositories.impl.RestMethods;
+
 import com.example.cornelious.busbooking.R;
+
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
 
 public class PassengerActivity extends Activity {
-    private EditText  idNumber;
+ //   private EditText  idNumber;
     private EditText name;
     private EditText lastName;
     private EditText street;
     private EditText city;
     private EditText code;
     private EditText searchId;
-    private Button button;
+    private Button buttonSearch;
+    Long id;
+    private Button buttonToday ;
+
 
     private String key;
     private IPassengerRepository repo;
@@ -38,13 +54,14 @@ public class PassengerActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.registercustomeractivity);
 
-        idNumber = (EditText) findViewById(R.id.txtID);
+
     //    button= (Button)findViewById(R.id.btnPreview);
         name = (EditText) findViewById(R.id.txtName);
         lastName = (EditText) findViewById(R.id.txtSurname);
         street = (EditText) findViewById(R.id.txtStreetName);
         city = (EditText) findViewById(R.id.txtCity);
         code = (EditText) findViewById(R.id.txtCode);
+        buttonSearch = (Button) findViewById(R.id.btnSearch);
     }
 
 
@@ -88,7 +105,7 @@ public class PassengerActivity extends Activity {
                     code.getText().toString(),
                     city.getText().toString());
             Passenger newPassenger = new PassengerFactoryImpl().createPassenger(
-                    idNumber.getText().toString(),
+                  //  idNumber.getText().toString(),
                     name.getText().toString(),
                     lastName.getText().toString(),
                     address);
@@ -110,12 +127,13 @@ public class PassengerActivity extends Activity {
                             .build();
                     Passenger update = new Passenger.PassengerBuilder()
                             .copy(passenger)
-                            .passNumber(idNumber.getText().toString())
+                            .id(Long.parseLong(searchId.getText().toString()))
+                            //.passNumber(idNumber.getText().toString())
                             .name(name.getText().toString())
                             .lastName(lastName.getText().toString())
                             .address(address)
                             .build();
-
+                    intent.putExtra("key",key);
                     intent.putExtra("pass",update);
                     startActivity(intent);
                 }
@@ -123,7 +141,7 @@ public class PassengerActivity extends Activity {
                     Toast.makeText(getBaseContext(), "The record could not be found", Toast.LENGTH_LONG).show();
                 }
 
-                Toast.makeText(getBaseContext(),"no impl yet",Toast.LENGTH_LONG).show();
+
 
             }
 
@@ -140,21 +158,23 @@ public class PassengerActivity extends Activity {
         catch (Exception e){}
     }
     public Passenger SearchByID(View view){
-        repo= new PassengerRepositoryImpl(App.getContext());
+        //repo= new PassengerRepositoryImpl(App.getContext());
       try {
           searchId=(EditText)findViewById(R.id.txtSearch);
-          Long id =Long.parseLong(searchId.getText().toString());
+         id =Long.parseLong(searchId.getText().toString());
 
-           passenger = repo.findById(id);
+          new HttpRequestTask().execute();
+            Thread.sleep(5000);
+
          if (passenger!=null) {
-             idNumber = (EditText) findViewById(R.id.txtID);
+
              name = (EditText) findViewById(R.id.txtName);
              lastName = (EditText) findViewById(R.id.txtSurname);
              street = (EditText) findViewById(R.id.txtStreetName);
              city = (EditText) findViewById(R.id.txtCity);
              code = (EditText) findViewById(R.id.txtCode);
 
-             street.setText(passenger.getPassNumber());
+             street.setText(passenger.getObjAdress().getStreet());
              name.setText(passenger.getName());
              lastName.setText(passenger.getLastName());
              city.setText(passenger.getObjAdress().getCity());
@@ -179,7 +199,7 @@ public class PassengerActivity extends Activity {
       }
     }
     public void clear(){
-        idNumber.setText("");
+       // idNumber.setText("");
         name.setText("");
         lastName.setText("");
         street.setText("");
@@ -187,14 +207,57 @@ public class PassengerActivity extends Activity {
         code.setText("");
     }
     public void deletePassenger(View view){
-       if (passenger!= null){
-           repo.remove(passenger);
+
+       new   HttpDeleteTask().execute();
            clear();
            Toast.makeText(getBaseContext(), "successfully deleted", Toast.LENGTH_LONG).show();
-       }
-        else{
-           Toast.makeText(getBaseContext(), "did not find the record", Toast.LENGTH_LONG).show();
-       }
+
+    }
+    private class HttpRequestTask extends AsyncTask<Void, Void, Passenger> {
+        @Override
+        protected Passenger doInBackground(Void... params) {
+            try {
+
+                final String BASE_URL = "http://148.100.5.107:8080/pass/{id}";
+                RestTemplate restTemplate = new RestTemplate();
+                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+                Passenger pass = restTemplate.getForObject(BASE_URL,Passenger.class,id+"");
+                passenger = new Passenger.PassengerBuilder().copy(pass).build();
+
+
+                return passenger;
+            } catch (Exception e) {
+                Log.e("MainActivity", e.getMessage(), e);
+            }
+
+            return null;
+        }
+
+    }
+    private class HttpDeleteTask extends AsyncTask<Void, Void, Passenger> {
+        @Override
+        protected Passenger doInBackground(Void... params) {
+            try {
+
+              final String BASE_URL = "http://148.100.5.107:8080/pass/{id}";
+               RestTemplate restTemplate = new RestTemplate();
+                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+                HttpHeaders  headers = new HttpHeaders();
+               // headers.setContentLength(MediaType.APPLICATION_JSON);
+                Passenger pass = restTemplate.getForObject(BASE_URL,Passenger.class,id+"");
+                restTemplate.delete(BASE_URL,id+"");
+               //  passenger = new Passenger.PassengerBuilder().copy(pass).build();
+
+
+                return passenger;
+            } catch (Exception e) {
+                Log.e("MainActivity", e.getMessage(), e);
+            }
+
+            return null;
+        }
+
     }
 
-}
+
+    }

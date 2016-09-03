@@ -9,6 +9,7 @@ public class PassengerAddress implements Serializable  {
     private String street;
     private String city;
     private String code;
+    public PassengerAddress(){}
  private PassengerAddress(AddressBuilder objAddressBuilder)
  {
      this.street=objAddressBuilder.street;

@@ -98,7 +98,7 @@
         <Button
             android:layout_width="264dp"
             android:layout_height="wrap_content"
-            android:text="Search Passenger"
+            android:text="View All"
             android:id="@+id/button2"
             android:layout_gravity="center_horizontal"
             android:onClick="displayAll"

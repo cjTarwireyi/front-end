@@ -16,9 +16,9 @@ public class PassengerFactoryImpl implements IPassengerFactory {
         return objPassengerFactory;
     }
     @Override
-    public Passenger createPassenger(String passNumber, String passengerName, String passengerSurname,PassengerAddress obAddress) {
+    public Passenger createPassenger( String passengerName, String passengerSurname,PassengerAddress obAddress) {
         Passenger objPassenger=new Passenger.PassengerBuilder()
-                .passNumber(passNumber)
+                //.passNumber(passNumber)
 
                 .name(passengerName)
                 .lastName(passengerSurname)

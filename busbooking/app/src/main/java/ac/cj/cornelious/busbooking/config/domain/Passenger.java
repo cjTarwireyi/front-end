@@ -1,5 +1,7 @@
 package ac.cj.cornelious.busbooking.config.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
 
 /**
@@ -7,14 +9,19 @@ import java.io.Serializable;
  */
 public class Passenger implements Serializable{
     private Long passNumber;
-    private String idNumber;
+   // private String idNumber;
+    @JsonProperty("id")
+    private Long  id;
     private String name;
     private String lastName;
     private PassengerAddress objAdress;
+    public Passenger(){
+
+    }
     private Passenger(PassengerBuilder objBuilder)
     {
         this.passNumber=objBuilder.id;
-        this.idNumber = objBuilder.passNumber;
+     //   this.idNumber = objBuilder.passNumber;
         this.name=objBuilder.name;
         this.lastName=objBuilder.lastName;
         this.objAdress=objBuilder.objAdress;
@@ -24,9 +31,9 @@ public class Passenger implements Serializable{
         return passNumber;
     }
 
-    public String getPassNumber() {
-        return idNumber;
-    }
+    //public String getPassNumber() {
+      //  return idNumber;
+    //}
 
     public String getName() {
         return name;
@@ -43,7 +50,7 @@ public class Passenger implements Serializable{
     public static class PassengerBuilder
     {
         private Long id;
-        private String passNumber;
+        // String passNumber;
         private String name;
         private String lastName;
         private  PassengerAddress objAdress;
@@ -53,11 +60,7 @@ public class Passenger implements Serializable{
             this.id =id;
             return this;
         }
-        public PassengerBuilder passNumber(String passNumber)
-        {
-            this.passNumber =passNumber;
-            return this;
-        }
+
         public PassengerBuilder name(String name)
         {
             this.name=name;
@@ -76,7 +79,7 @@ public class Passenger implements Serializable{
         public PassengerBuilder copy(Passenger objPassenger)
         {
             this.id =objPassenger.passNumber;
-            this.passNumber =objPassenger.idNumber;
+      //      this.passNumber =objPassenger.idNumber;
             this.name=objPassenger.name;
             this.lastName=objPassenger.lastName;
             this.objAdress=objPassenger.objAdress;
